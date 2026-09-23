@@ -1,0 +1,14 @@
+{
+  "name": "library-management-system",
+  "version": "1.0.0",
+  "description": "Full Stack MERN Library Management System",
+  "scripts": {
+    "server": "npm run dev --prefix backend",
+    "client": "npm run dev --prefix frontend",
+    "seed": "npm run seed --prefix backend",
+    "install-all": "npm install --prefix backend && npm install --prefix frontend"
+  },
+  "keywords": ["mern", "library-management-system", "mongodb", "express", "react", "node"],
+  "author": "",
+  "license": "ISC"
+}
