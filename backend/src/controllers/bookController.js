@@ -6,22 +6,34 @@ import Transaction from '../models/Transaction.js';
 // @access  Public
 export const getBooks = async (req, res) => {
   try {
-    const { search, category, availability, sort } = req.query;
+    const { search, category, availability, lendingType, language, sort } = req.query;
 
     let query = {};
 
-    // Search by title, author, or ISBN
+    // Search by title, author, ISBN, Accession No, or Call No
     if (search) {
       query.$or = [
         { title: { $regex: search, $options: 'i' } },
         { author: { $regex: search, $options: 'i' } },
         { isbn: { $regex: search, $options: 'i' } },
+        { accessionNo: { $regex: search, $options: 'i' } },
+        { callNumber: { $regex: search, $options: 'i' } },
       ];
     }
 
     // Category filter
     if (category && category !== 'All') {
       query.category = category;
+    }
+
+    // Lending type filter (Lending, SR, PR, Past Paper)
+    if (lendingType && lendingType !== 'All') {
+      query.lendingType = lendingType;
+    }
+
+    // Language filter
+    if (language && language !== 'All') {
+      query.language = language;
     }
 
     // Availability filter
@@ -63,27 +75,51 @@ export const getBookById = async (req, res) => {
 // @access  Private/Admin
 export const createBook = async (req, res) => {
   try {
-    const { title, author, isbn, category, totalCopies, shelfLocation, coverImage, description, publishedYear } = req.body;
+    const {
+      title,
+      author,
+      isbn,
+      category,
+      accessionNo,
+      callNumber,
+      lendingType,
+      language,
+      totalCopies,
+      shelfLocation,
+      coverImage,
+      description,
+      publishedYear,
+      publisher,
+    } = req.body;
 
     const existingBook = await Book.findOne({ isbn });
     if (existingBook) {
       return res.status(400).json({ success: false, message: 'Book with this ISBN already exists' });
     }
 
+    // Auto-generate accessionNo if not provided
+    const bookCount = await Book.countDocuments();
+    const generatedAccession = accessionNo?.trim() || `ACC-${new Date().getFullYear()}-${String(bookCount + 101).padStart(4, '0')}`;
+
     const book = await Book.create({
       title,
       author,
       isbn,
       category,
+      accessionNo: generatedAccession,
+      callNumber: callNumber || '000 GEN',
+      lendingType: lendingType || 'Lending',
+      language: language || 'English',
       totalCopies: Number(totalCopies),
       availableCopies: Number(totalCopies),
-      shelfLocation: shelfLocation || 'Main Hall',
+      shelfLocation: shelfLocation || 'Main Library - Floor 1',
       coverImage: coverImage || '',
       description: description || '',
       publishedYear: publishedYear ? Number(publishedYear) : undefined,
+      publisher: publisher || '',
     });
 
-    res.status(201).json({ success: true, data: book, message: 'Book added successfully' });
+    res.status(201).json({ success: true, data: book, message: 'Book added to catalog successfully' });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -142,7 +178,7 @@ export const deleteBook = async (req, res) => {
     if (activeBorrows > 0) {
       return res.status(400).json({
         success: false,
-        message: `Cannot delete book: ${activeBorrows} copies are currently issued to members`,
+        message: `Cannot delete book: ${activeBorrows} copies are currently issued to patrons`,
       });
     }
 

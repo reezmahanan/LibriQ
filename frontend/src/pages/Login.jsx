@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { BookOpen, KeyRound, Mail, Loader2, ArrowRight } from 'lucide-react';
+import { Lock, Mail, Loader2, ArrowRight, ShieldCheck, GraduationCap } from 'lucide-react';
 
 export default function Login({ onSwitchToRegister }) {
   const [email, setEmail] = useState('');
@@ -35,47 +35,66 @@ export default function Login({ onSwitchToRegister }) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-200 p-8 space-y-6">
+    <div className="min-h-screen bg-[#F7F9FC] flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-200 p-8 space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-500/30 mb-2">
-            <BookOpen className="w-7 h-7" />
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#1E3A5F] text-[#F4B942] shadow-lg shadow-[#1E3A5F]/20 border border-[#2E6F95]/30 mb-2 font-black text-2xl">
+            LQ
           </div>
-          <h1 className="text-2xl font-black tracking-tight text-slate-900">Welcome to LibriQ</h1>
-          <p className="text-sm text-slate-500">Sign in to access your library account</p>
+          <h1 className="text-2xl font-black tracking-tight text-[#1E3A5F]">
+            LibriQ LMS • நூலகம்
+          </h1>
+          <p className="text-xs text-slate-500 font-medium">
+            தேசிய மற்றும் பல்கலைக்கழக நூலகம் • විශ්වවිද්‍යාල පුස්තකාලය
+          </p>
         </div>
 
         {/* Demo Quick Fill Buttons */}
-        <div className="p-3.5 bg-blue-50/60 rounded-2xl border border-blue-100 text-xs space-y-2">
-          <span className="font-bold text-blue-900 uppercase tracking-wider block">Quick Demo Login:</span>
+        <div className="p-4 bg-[#eaf0f6] rounded-2xl border border-[#d4e0ee] text-xs space-y-2.5">
+          <div className="flex items-center justify-between">
+            <span className="font-bold text-[#1E3A5F] uppercase tracking-wider text-[11px]">
+              Quick Demo Access / மாதிரி உள்நுழைவு
+            </span>
+            <span className="text-[10px] bg-[#F4B942] text-[#1E3A5F] font-extrabold px-1.5 py-0.5 rounded">
+              1-Click
+            </span>
+          </div>
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
               onClick={setDemoAdmin}
-              className="px-3 py-1.5 bg-white border border-blue-200 rounded-xl font-semibold text-blue-700 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition text-center shadow-xs"
+              className="px-3 py-2 bg-white border border-[#bccfe3] rounded-xl font-bold text-[#1E3A5F] hover:bg-[#1E3A5F] hover:text-[#F4B942] transition text-center shadow-xs flex flex-col items-center justify-center gap-0.5"
             >
-              Librarian (Admin)
+              <span className="flex items-center gap-1 text-xs">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#F4B942]" /> Librarian / நூலகர்
+              </span>
+              <span className="text-[10px] opacity-75 font-normal">Dr. Senarath</span>
             </button>
             <button
               type="button"
               onClick={setDemoMember}
-              className="px-3 py-1.5 bg-white border border-blue-200 rounded-xl font-semibold text-blue-700 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition text-center shadow-xs"
+              className="px-3 py-2 bg-white border border-[#bccfe3] rounded-xl font-bold text-[#1E3A5F] hover:bg-[#1E3A5F] hover:text-[#F4B942] transition text-center shadow-xs flex flex-col items-center justify-center gap-0.5"
             >
-              Student (Member)
+              <span className="flex items-center gap-1 text-xs">
+                <GraduationCap className="w-3.5 h-3.5 text-[#F4B942]" /> Student / மாணவர்
+              </span>
+              <span className="text-[10px] font-mono text-[#2E6F95] font-semibold">23IT0480</span>
             </button>
           </div>
         </div>
 
         {error && (
-          <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl font-medium">
+          <div className="p-3.5 text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-xl font-medium">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 text-[#1F2937]">
           <div className="space-y-1">
-            <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">Email Address</label>
+            <label className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">
+              Institutional Email / மின்னஞ்சல்
+            </label>
             <div className="relative">
               <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
@@ -83,23 +102,25 @@ export default function Login({ onSwitchToRegister }) {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@example.com"
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition"
+                placeholder="student@lms.com or admin@lms.com"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E6F95]/30 focus:border-[#1E3A5F] transition"
               />
             </div>
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">Password</label>
+            <label className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">
+              Password / கடவுச்சொல்
+            </label>
             <div className="relative">
-              <KeyRound className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E6F95]/30 focus:border-[#1E3A5F] transition"
               />
             </div>
           </div>
@@ -107,20 +128,20 @@ export default function Login({ onSwitchToRegister }) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-blue-500/25 transition active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50"
+            className="w-full py-3 bg-[#1E3A5F] hover:bg-[#2E6F95] text-white font-bold text-sm rounded-xl shadow-lg shadow-[#1E3A5F]/20 transition active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50 border border-[#2E6F95]/30"
           >
-            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>Sign In</span>}
-            {!loading && <ArrowRight className="w-4 h-4" />}
+            {loading ? <Loader2 className="w-4 h-4 animate-spin text-[#F4B942]" /> : <span>Sign In / உள்நுழைக</span>}
+            {!loading && <ArrowRight className="w-4 h-4 text-[#F4B942]" />}
           </button>
         </form>
 
         <div className="pt-2 text-center text-xs text-slate-500">
-          Don't have an account?{' '}
+          New student or faculty patron?{' '}
           <button
             onClick={onSwitchToRegister}
-            className="font-bold text-blue-600 hover:underline"
+            className="font-bold text-[#2E6F95] hover:text-[#1E3A5F] hover:underline"
           >
-            Create an account
+            Register Student Card / பதிவு செய்க
           </button>
         </div>
       </div>

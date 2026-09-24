@@ -23,6 +23,26 @@ const bookSchema = new mongoose.Schema(
       required: [true, 'Category is required'],
       trim: true,
     },
+    accessionNo: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    callNumber: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    lendingType: {
+      type: String,
+      enum: ['Lending', 'Scheduled Reference (SR)', 'Permanent Reference (PR)', 'Past Paper'],
+      default: 'Lending',
+    },
+    language: {
+      type: String,
+      enum: ['English', 'Sinhala', 'Tamil', 'Multilingual'],
+      default: 'English',
+    },
     totalCopies: {
       type: Number,
       required: [true, 'Total copies count is required'],
@@ -35,7 +55,7 @@ const bookSchema = new mongoose.Schema(
     },
     shelfLocation: {
       type: String,
-      default: 'General',
+      default: 'Main Library - Floor 1',
       trim: true,
     },
     coverImage: {
@@ -49,6 +69,11 @@ const bookSchema = new mongoose.Schema(
     publishedYear: {
       type: Number,
     },
+    publisher: {
+      type: String,
+      default: '',
+      trim: true,
+    },
   },
   {
     timestamps: true,
@@ -56,6 +81,18 @@ const bookSchema = new mongoose.Schema(
 );
 
 // Search indexing
-bookSchema.index({ title: 'text', author: 'text', category: 'text', isbn: 'text' });
+bookSchema.index(
+  {
+    title: 'text',
+    author: 'text',
+    category: 'text',
+    isbn: 'text',
+    accessionNo: 'text',
+    callNumber: 'text',
+  },
+  {
+    language_override: 'searchLanguage',
+  }
+);
 
 export default mongoose.model('Book', bookSchema);

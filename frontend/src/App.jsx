@@ -26,10 +26,12 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="flex flex-col items-center gap-3 text-slate-500">
-          <Loader2 className="w-9 h-9 animate-spin text-blue-600" />
-          <span className="text-sm font-semibold tracking-wide">Starting LibriQ LMS...</span>
+      <div className="min-h-screen flex items-center justify-center bg-[#F7F9FC]">
+        <div className="flex flex-col items-center gap-3 text-[#1F2937]">
+          <Loader2 className="w-9 h-9 animate-spin text-[#1E3A5F]" />
+          <span className="text-sm font-bold tracking-wide text-[#1E3A5F]">
+            Starting LibriQ LMS • நூலக அமைப்பு ஆரம்பிக்கிறது...
+          </span>
         </div>
       </div>
     );
@@ -60,7 +62,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#F7F9FC] flex flex-col font-sans text-[#1F2937]">
       <Navbar onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
 
       <div className="flex flex-1">

@@ -14,6 +14,8 @@ export const getMembers = async (req, res) => {
         { name: { $regex: search, $options: 'i' } },
         { email: { $regex: search, $options: 'i' } },
         { memberId: { $regex: search, $options: 'i' } },
+        { indexNo: { $regex: search, $options: 'i' } },
+        { nic: { $regex: search, $options: 'i' } },
       ];
     }
 

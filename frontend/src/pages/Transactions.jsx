@@ -7,7 +7,6 @@ import {
   AlertTriangle,
   RotateCcw,
   Calendar,
-  Filter,
   Loader2,
   CheckCircle,
   AlertCircle
@@ -45,7 +44,7 @@ export default function Transactions({ onOpenIssueModal }) {
   };
 
   const handleReturn = async (transId) => {
-    if (!window.confirm('Process return for this book?')) return;
+    if (!window.confirm('Process return & settle any fine for this book?')) return;
 
     setReturnLoading(transId);
     setFeedback(null);
@@ -68,7 +67,7 @@ export default function Transactions({ onOpenIssueModal }) {
 
   const formatDate = (dateStr) => {
     if (!dateStr) return '—';
-    return new Date(dateStr).toLocaleDateString('en-US', {
+    return new Date(dateStr).toLocaleDateString('en-GB', {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
@@ -76,26 +75,26 @@ export default function Transactions({ onOpenIssueModal }) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-[#1F2937]">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black tracking-tight text-slate-900">
-            {isAdmin ? 'Book Loans & Returns' : 'My Borrowed Books'}
+          <h1 className="text-2xl font-black tracking-tight text-[#1E3A5F]">
+            {isAdmin ? 'Circulation Desk (Issues & Returns)' : 'My University Borrowed Books'}
           </h1>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-500 font-medium">
             {isAdmin
-              ? 'Track active checkouts, overdue books, and handle returns.'
-              : 'Review your borrowed books, upcoming due dates, and past library records.'}
+              ? 'Track active loans, calculate late return penalties (Rs. 10/day), and process returns.'
+              : 'Review your borrowed titles, due dates, and Sri Lankan Rupee overdue fines.'}
           </p>
         </div>
 
         {isAdmin && (
           <button
             onClick={onOpenIssueModal}
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl shadow-md shadow-blue-500/20 transition active:scale-[0.98]"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#1E3A5F] hover:bg-[#2E6F95] text-white font-bold text-sm rounded-xl shadow-md transition active:scale-95 border border-[#2E6F95]/30"
           >
-            <ArrowLeftRight className="w-4 h-4" />
+            <ArrowLeftRight className="w-4 h-4 text-[#F4B942]" />
             <span>Issue New Book</span>
           </button>
         )}
@@ -103,7 +102,7 @@ export default function Transactions({ onOpenIssueModal }) {
 
       {feedback && (
         <div
-          className={`p-4 rounded-2xl text-sm font-medium flex items-center justify-between ${
+          className={`p-4 rounded-2xl text-sm font-semibold flex items-center justify-between ${
             feedback.type === 'success'
               ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
               : 'bg-rose-50 text-rose-800 border border-rose-200'
@@ -119,7 +118,7 @@ export default function Transactions({ onOpenIssueModal }) {
           </div>
           <button
             onClick={() => setFeedback(null)}
-            className="text-xs font-semibold uppercase hover:underline"
+            className="text-xs font-bold uppercase hover:underline"
           >
             Dismiss
           </button>
@@ -127,11 +126,11 @@ export default function Transactions({ onOpenIssueModal }) {
       )}
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-2 bg-white p-1.5 rounded-2xl border border-slate-200 shadow-sm w-fit text-xs font-semibold">
+      <div className="flex items-center gap-2 bg-white p-1.5 rounded-2xl border border-slate-200 shadow-xs w-fit text-xs font-bold">
         {[
           { id: 'all', label: 'All Records' },
           { id: 'issued', label: 'Active Loans' },
-          { id: 'overdue', label: 'Overdue' },
+          { id: 'overdue', label: 'Overdue (Fines)' },
           { id: 'returned', label: 'Completed Returns' },
         ].map((tab) => (
           <button
@@ -139,8 +138,8 @@ export default function Transactions({ onOpenIssueModal }) {
             onClick={() => setStatusFilter(tab.id)}
             className={`px-3.5 py-2 rounded-xl transition ${
               statusFilter === tab.id
-                ? 'bg-blue-600 text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                ? 'bg-[#1E3A5F] text-[#F4B942] shadow-xs'
+                : 'text-[#1F2937] hover:bg-[#F7F9FC]'
             }`}
           >
             {tab.label}
@@ -149,30 +148,30 @@ export default function Transactions({ onOpenIssueModal }) {
       </div>
 
       {/* Transactions Table */}
-      <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
         {loading ? (
           <div className="py-20 flex flex-col items-center justify-center gap-3 text-slate-400">
-            <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-            <span className="text-sm font-medium">Loading loan history...</span>
+            <Loader2 className="w-8 h-8 animate-spin text-[#1E3A5F]" />
+            <span className="text-sm font-semibold">Loading circulation ledger...</span>
           </div>
         ) : transactions.length === 0 ? (
           <div className="py-16 text-center space-y-2">
             <ArrowLeftRight className="w-10 h-10 text-slate-300 mx-auto" />
-            <h3 className="text-base font-bold text-slate-800">No transactions recorded</h3>
+            <h3 className="text-base font-bold text-[#1E3A5F]">No circulation records found</h3>
             <p className="text-xs text-slate-500">There are no records matching your current filter.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-600">
-              <thead className="bg-slate-50/75 text-xs uppercase font-semibold text-slate-400 tracking-wider">
+            <table className="w-full text-left text-sm text-[#1F2937]">
+              <thead className="bg-[#F7F9FC] text-xs uppercase font-bold text-slate-500 tracking-wider">
                 <tr>
-                  <th className="px-6 py-4">Book Details</th>
-                  {isAdmin && <th className="px-6 py-4">Member Info</th>}
+                  <th className="px-6 py-4">Book Details & Accession</th>
+                  {isAdmin && <th className="px-6 py-4">Student Patron</th>}
                   <th className="px-6 py-4">Issued On</th>
                   <th className="px-6 py-4">Due Date</th>
                   <th className="px-6 py-4">Status</th>
-                  <th className="px-6 py-4">Fine</th>
-                  {isAdmin && <th className="px-6 py-4 text-right">Actions</th>}
+                  <th className="px-6 py-4">Fine (LKR)</th>
+                  {isAdmin && <th className="px-6 py-4 text-right">Circulation Action</th>}
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -181,7 +180,7 @@ export default function Transactions({ onOpenIssueModal }) {
                   const isReturned = tx.status === 'returned';
 
                   return (
-                    <tr key={tx._id} className="hover:bg-slate-50/50 transition">
+                    <tr key={tx._id} className="hover:bg-[#F7F9FC]/70 transition">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           {tx.book?.coverImage ? (
@@ -191,47 +190,56 @@ export default function Transactions({ onOpenIssueModal }) {
                               className="w-10 h-14 object-cover rounded-lg shadow-xs flex-shrink-0"
                             />
                           ) : (
-                            <div className="w-10 h-14 bg-slate-100 rounded-lg flex items-center justify-center text-slate-400 font-bold text-xs flex-shrink-0">
+                            <div className="w-10 h-14 bg-[#eaf0f6] rounded-lg flex items-center justify-center text-[#1E3A5F] font-bold text-xs flex-shrink-0">
                               Book
                             </div>
                           )}
                           <div>
-                            <span className="font-bold text-slate-900 block line-clamp-1">
+                            <span className="font-extrabold text-[#1E3A5F] block line-clamp-1">
                               {tx.book?.title || 'Unknown Title'}
                             </span>
                             <span className="text-xs text-slate-500">{tx.book?.author}</span>
-                            <span className="text-[11px] font-mono text-slate-400 block">
-                              ISBN: {tx.book?.isbn}
-                            </span>
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                              {tx.book?.accessionNo && (
+                                <span className="text-[10px] font-mono font-bold bg-[#edf5f9] text-[#1E3A5F] px-1.5 py-0.2 rounded">
+                                  {tx.book.accessionNo}
+                                </span>
+                              )}
+                              {tx.book?.lendingType && (
+                                <span className="text-[10px] font-semibold text-slate-500">
+                                  • {tx.book.lendingType}
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </td>
 
                       {isAdmin && (
                         <td className="px-6 py-4">
-                          <span className="font-semibold text-slate-800 block">
+                          <span className="font-bold text-[#1F2937] block">
                             {tx.member?.name || 'Member'}
                           </span>
-                          <span className="text-xs text-slate-500 block">{tx.member?.email}</span>
-                          <span className="text-[11px] font-mono text-blue-600 font-semibold">
-                            {tx.member?.memberId}
+                          <span className="text-xs text-slate-500 block">{tx.member?.faculty}</span>
+                          <span className="text-[11px] font-mono font-extrabold text-[#1E3A5F] bg-[#F4B942]/20 px-2 py-0.5 rounded inline-block mt-0.5">
+                            {tx.member?.indexNo || tx.member?.memberId}
                           </span>
                         </td>
                       )}
 
-                      <td className="px-6 py-4 text-xs font-medium text-slate-700">
+                      <td className="px-6 py-4 text-xs font-semibold text-slate-600">
                         {formatDate(tx.issueDate)}
                       </td>
 
                       <td className="px-6 py-4 text-xs">
-                        <div className="flex items-center gap-1.5 font-medium">
-                          <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                          <span className={isOverdue ? 'text-rose-600 font-bold' : 'text-slate-700'}>
+                        <div className="flex items-center gap-1.5 font-bold">
+                          <Calendar className="w-3.5 h-3.5 text-[#2E6F95]" />
+                          <span className={isOverdue ? 'text-rose-600 font-black' : 'text-slate-700'}>
                             {formatDate(tx.dueDate)}
                           </span>
                         </div>
                         {isReturned && (
-                          <span className="text-[11px] text-emerald-600 block mt-0.5">
+                          <span className="text-[11px] text-emerald-700 font-semibold block mt-0.5">
                             Returned: {formatDate(tx.returnDate)}
                           </span>
                         )}
@@ -239,27 +247,27 @@ export default function Transactions({ onOpenIssueModal }) {
 
                       <td className="px-6 py-4">
                         {isReturned && (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                            <CheckCircle2 className="w-3 h-3" /> Returned
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Returned
                           </span>
                         )}
                         {tx.status === 'issued' && (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
-                            <Clock className="w-3 h-3" /> Active Loan
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-[#edf5f9] text-[#1E3A5F] border border-[#d6e8f2]">
+                            <Clock className="w-3.5 h-3.5 text-[#2E6F95]" /> Active Loan
                           </span>
                         )}
                         {isOverdue && (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
-                            <AlertTriangle className="w-3 h-3" /> Overdue
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-black bg-rose-50 text-rose-700 border border-rose-200">
+                            <AlertTriangle className="w-3.5 h-3.5" /> Overdue
                           </span>
                         )}
                       </td>
 
-                      <td className="px-6 py-4 font-bold">
+                      <td className="px-6 py-4 font-black">
                         {tx.fine > 0 ? (
-                          <span className="text-rose-600">${tx.fine}</span>
+                          <span className="text-rose-600">Rs. {tx.fine}.00</span>
                         ) : (
-                          <span className="text-slate-400 font-normal">$0</span>
+                          <span className="text-slate-400 font-normal">Rs. 0.00</span>
                         )}
                       </td>
 
@@ -269,7 +277,7 @@ export default function Transactions({ onOpenIssueModal }) {
                             <button
                               onClick={() => handleReturn(tx._id)}
                               disabled={returnLoading === tx._id}
-                              className="inline-flex items-center gap-1 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-xl shadow-xs transition disabled:opacity-50"
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-xs transition disabled:opacity-50"
                             >
                               {returnLoading === tx._id ? (
                                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -279,7 +287,7 @@ export default function Transactions({ onOpenIssueModal }) {
                               <span>Process Return</span>
                             </button>
                           ) : (
-                            <span className="text-xs text-slate-400 font-medium">Completed</span>
+                            <span className="text-xs text-slate-400 font-semibold">Cleared</span>
                           )}
                         </td>
                       )}

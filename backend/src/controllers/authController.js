@@ -13,7 +13,7 @@ const generateToken = (id) => {
 // @access  Public
 export const registerUser = async (req, res) => {
   try {
-    const { name, email, password, role, phone } = req.body;
+    const { name, email, password, role, phone, indexNo, faculty, nic } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({ success: false, message: 'Please provide all required fields' });
@@ -24,9 +24,10 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ success: false, message: 'User already exists with this email' });
     }
 
-    // Generate unique memberId if role is member or default
+    // Generate unique memberId or use provided index number
     const count = await User.countDocuments();
-    const memberId = `MEM-${1001 + count}`;
+    const assignedIndex = indexNo?.trim() || `24IT${String(100 + count).padStart(4, '0')}`;
+    const memberId = assignedIndex;
 
     const user = await User.create({
       name,
@@ -35,6 +36,9 @@ export const registerUser = async (req, res) => {
       role: role === 'admin' ? 'admin' : 'member',
       phone: phone || '',
       memberId,
+      indexNo: assignedIndex,
+      faculty: faculty || 'Faculty of Information Technology',
+      nic: nic || '',
     });
 
     res.status(201).json({
@@ -46,6 +50,9 @@ export const registerUser = async (req, res) => {
         role: user.role,
         phone: user.phone,
         memberId: user.memberId,
+        indexNo: user.indexNo,
+        faculty: user.faculty,
+        nic: user.nic,
         token: generateToken(user._id),
       },
       message: 'Registration successful',
@@ -84,7 +91,10 @@ export const loginUser = async (req, res) => {
         email: user.email,
         role: user.role,
         phone: user.phone,
-        memberId: user.memberId,
+        memberId: user.memberId || user.indexNo,
+        indexNo: user.indexNo,
+        faculty: user.faculty,
+        nic: user.nic,
         token: generateToken(user._id),
       },
       message: 'Login successful',

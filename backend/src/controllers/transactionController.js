@@ -137,7 +137,7 @@ export const returnBook = async (req, res) => {
       success: true,
       data: transaction,
       message: `Book successfully returned! ${
-        calculatedFine > 0 ? `Late fine applicable: $${calculatedFine}` : 'No late fine.'
+        calculatedFine > 0 ? `Late fine applicable: Rs. ${calculatedFine}.00` : 'No late fine.'
       }`,
     });
   } catch (error) {
@@ -164,8 +164,8 @@ export const getTransactions = async (req, res) => {
     }
 
     const transactions = await Transaction.find(query)
-      .populate('book', 'title author isbn coverImage shelfLocation')
-      .populate('member', 'name email memberId phone')
+      .populate('book', 'title author isbn accessionNo callNumber lendingType language coverImage shelfLocation')
+      .populate('member', 'name email memberId indexNo faculty phone')
       .sort({ createdAt: -1 });
 
     res.json({ success: true, count: transactions.length, data: transactions });

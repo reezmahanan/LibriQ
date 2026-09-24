@@ -34,6 +34,21 @@ const userSchema = new mongoose.Schema(
       unique: true,
       sparse: true,
     },
+    indexNo: {
+      type: String,
+      trim: true,
+      sparse: true,
+    },
+    faculty: {
+      type: String,
+      default: 'Faculty of Information Technology',
+      trim: true,
+    },
+    nic: {
+      type: String,
+      trim: true,
+      default: '',
+    },
   },
   {
     timestamps: true,

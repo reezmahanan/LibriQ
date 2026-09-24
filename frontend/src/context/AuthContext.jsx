@@ -30,8 +30,8 @@ export const AuthProvider = ({ children }) => {
     throw new Error(res.data?.message || 'Login failed');
   };
 
-  const register = async (name, email, password, role = 'member', phone = '') => {
-    const res = await api.post('/auth/register', { name, email, password, role, phone });
+  const register = async (name, email, password, role = 'member', phone = '', additionalData = {}) => {
+    const res = await api.post('/auth/register', { name, email, password, role, phone, ...additionalData });
     if (res.data?.success) {
       const userData = res.data.data;
       setUser(userData);
