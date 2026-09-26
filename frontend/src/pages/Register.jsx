@@ -45,8 +45,13 @@ export default function Register({ onSwitchToLogin }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F9FC] flex items-center justify-center p-4">
-      <div className="w-full max-w-lg bg-white rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-200 p-8 space-y-6">
+    <div 
+      className="min-h-screen relative flex items-center justify-center p-4 bg-cover bg-center bg-no-repeat bg-fixed py-8"
+      style={{
+        backgroundImage: `linear-gradient(135deg, rgba(30, 58, 95, 0.90) 0%, rgba(46, 111, 149, 0.82) 100%), url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=1920&q=80')`
+      }}
+    >
+      <div className="w-full max-w-lg bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl border border-white/50 p-8 space-y-6 relative z-10">
         {/* Header */}
         <div className="text-center space-y-2">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#1E3A5F] text-[#F4B942] shadow-lg shadow-[#1E3A5F]/20 border border-[#2E6F95]/30 mb-2 font-black text-2xl">

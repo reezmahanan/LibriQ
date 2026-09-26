@@ -51,7 +51,12 @@ export default function Dashboard({ setActiveTab, onOpenIssueModal, onOpenAddBoo
   return (
     <div className="space-y-6 text-[#1F2937]">
       {/* Welcome Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#1E3A5F] via-[#234d77] to-[#2E6F95] text-white p-6 sm:p-8 shadow-xl shadow-[#1E3A5F]/15 border border-[#2E6F95]/30">
+      <div 
+        className="relative overflow-hidden rounded-3xl text-white p-6 sm:p-8 shadow-xl shadow-[#1E3A5F]/15 border border-[#2E6F95]/40 bg-cover bg-center"
+        style={{
+          backgroundImage: `linear-gradient(135deg, rgba(30, 58, 95, 0.94) 0%, rgba(35, 77, 119, 0.91) 50%, rgba(46, 111, 149, 0.88) 100%), url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=1920&q=80')`
+        }}
+      >
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
