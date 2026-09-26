@@ -18,7 +18,13 @@ export default function Login({ onSwitchToRegister }) {
     try {
       await login(email, password);
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Login failed');
+      if (!err.response) {
+        setError('Cannot connect to backend server. Please verify port 5000 is running.');
+      } else if (err.response.status === 500) {
+        setError(err.response.data?.message || 'Backend connection error (500). Please check if backend server is active.');
+      } else {
+        setError(err.response?.data?.message || err.message || 'Invalid credentials or login failed');
+      }
     } finally {
       setLoading(false);
     }
