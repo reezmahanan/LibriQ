@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Lock, Mail, Loader2, ArrowRight, ShieldCheck, GraduationCap } from 'lucide-react';
+import { Lock, Mail, Loader2, ArrowRight } from 'lucide-react';
 
 export default function Login({ onSwitchToRegister }) {
   const [email, setEmail] = useState('');
@@ -30,15 +30,6 @@ export default function Login({ onSwitchToRegister }) {
     }
   };
 
-  const setDemoAdmin = () => {
-    setEmail('admin@lms.com');
-    setPassword('admin123');
-  };
-
-  const setDemoMember = () => {
-    setEmail('student@lms.com');
-    setPassword('student123');
-  };
   return (
     <div 
       className="min-h-screen relative flex items-center justify-center p-4 bg-cover bg-center bg-no-repeat bg-fixed"
@@ -60,39 +51,6 @@ export default function Login({ onSwitchToRegister }) {
           </p>
         </div>
 
-        {/* Demo Quick Fill Buttons */}
-        <div className="p-4 bg-[#eaf0f6] rounded-2xl border border-[#d4e0ee] text-xs space-y-2.5">
-          <div className="flex items-center justify-between">
-            <span className="font-bold text-[#1E3A5F] uppercase tracking-wider text-[11px]">
-              Quick Demo Access / மாதிரி உள்நுழைவு
-            </span>
-            <span className="text-[10px] bg-[#F4B942] text-[#1E3A5F] font-extrabold px-1.5 py-0.5 rounded">
-              1-Click
-            </span>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={setDemoAdmin}
-              className="px-3 py-2 bg-white border border-[#bccfe3] rounded-xl font-bold text-[#1E3A5F] hover:bg-[#1E3A5F] hover:text-[#F4B942] transition text-center shadow-xs flex flex-col items-center justify-center gap-0.5"
-            >
-              <span className="flex items-center gap-1 text-xs">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#F4B942]" /> Librarian / நூலகர்
-              </span>
-              <span className="text-[10px] opacity-75 font-normal">Dr. Senarath</span>
-            </button>
-            <button
-              type="button"
-              onClick={setDemoMember}
-              className="px-3 py-2 bg-white border border-[#bccfe3] rounded-xl font-bold text-[#1E3A5F] hover:bg-[#1E3A5F] hover:text-[#F4B942] transition text-center shadow-xs flex flex-col items-center justify-center gap-0.5"
-            >
-              <span className="flex items-center gap-1 text-xs">
-                <GraduationCap className="w-3.5 h-3.5 text-[#F4B942]" /> Student / மாணவர்
-              </span>
-              <span className="text-[10px] font-mono text-[#2E6F95] font-semibold">23IT0480</span>
-            </button>
-          </div>
-        </div>
 
         {error && (
           <div className="p-3.5 text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-xl font-medium">
