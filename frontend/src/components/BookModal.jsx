@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import { X, BookPlus, Loader2 } from 'lucide-react';
 import api from '../api/client';
 
 export default function BookModal({ isOpen, onClose, onSave, bookToEdit, categories }) {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     title: '',
     author: '',
@@ -93,11 +95,12 @@ export default function BookModal({ isOpen, onClose, onSave, bookToEdit, categor
             <div className="w-8 h-8 rounded-lg bg-[#1E3A5F] text-[#F4B942] flex items-center justify-center">
               <BookPlus className="w-4 h-4" />
             </div>
-            <span>{bookToEdit ? 'Edit Accession Details' : 'Add New Library Accession'}</span>
+            <span>{bookToEdit ? t('modal_edit_title', 'Edit Accession Details') : t('modal_add_title', 'Add New Library Accession')}</span>
           </div>
           <button
             onClick={onClose}
             className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-200/50 transition"
+            aria-label="Close"
           >
             <X className="w-5 h-5" />
           </button>
@@ -113,7 +116,9 @@ export default function BookModal({ isOpen, onClose, onSave, bookToEdit, categor
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1 md:col-span-2">
-              <label className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">Book Title *</label>
+              <label className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">
+                {t('field_book_title', 'Book Title')} *
+              </label>
               <input
                 type="text"
                 required
@@ -125,7 +130,9 @@ export default function BookModal({ isOpen, onClose, onSave, bookToEdit, categor
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">Author(s) *</label>
+              <label className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">
+                {t('field_author', 'Author(s)')} *
+              </label>
               <input
                 type="text"
                 required
@@ -137,7 +144,9 @@ export default function BookModal({ isOpen, onClose, onSave, bookToEdit, categor
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">ISBN Number *</label>
+              <label className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">
+                {t('field_isbn', 'ISBN Number')} *
+              </label>
               <input
                 type="text"
                 required
@@ -153,20 +162,20 @@ export default function BookModal({ isOpen, onClose, onSave, bookToEdit, categor
 
             <div className="space-y-1">
               <label className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">
-                Accession Number (Barcoded)
+                {t('field_accession', 'Accession Number')}
               </label>
               <input
                 type="text"
                 value={formData.accessionNo}
                 onChange={(e) => setFormData({ ...formData, accessionNo: e.target.value })}
-                placeholder="e.g. ACC-2024-0480 (auto if empty)"
+                placeholder="e.g. ACC-2024-0480"
                 className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E6F95]/30 focus:border-[#1E3A5F] transition font-mono uppercase"
               />
             </div>
 
             <div className="space-y-1">
               <label className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">
-                Dewey Decimal Call No (DDC)
+                {t('field_call_no', 'Dewey Decimal Call No')}
               </label>
               <input
                 type="text"
@@ -179,36 +188,40 @@ export default function BookModal({ isOpen, onClose, onSave, bookToEdit, categor
 
             <div className="space-y-1">
               <label className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">
-                Lending Classification
+                {t('field_lending_type', 'Lending Classification')}
               </label>
               <select
                 value={formData.lendingType}
                 onChange={(e) => setFormData({ ...formData, lendingType: e.target.value })}
                 className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E6F95]/30 focus:border-[#1E3A5F] transition bg-white"
               >
-                <option value="Lending">Lending (සාමාන්‍ය ණයට දීම)</option>
-                <option value="Scheduled Reference (SR)">Scheduled Reference - SR (විමර්ශන)</option>
-                <option value="Permanent Reference (PR)">Permanent Reference - PR (ස්ථිර විමර්ශන)</option>
-                <option value="Past Paper">Past Exam Paper Repository</option>
+                <option value="Lending">Lending</option>
+                <option value="Scheduled Reference (SR)">Scheduled Reference (SR)</option>
+                <option value="Permanent Reference (PR)">Permanent Reference (PR)</option>
+                <option value="Past Paper">Past Exam Papers</option>
               </select>
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">Language</label>
+              <label className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">
+                {t('field_language', 'Language')}
+              </label>
               <select
                 value={formData.language}
                 onChange={(e) => setFormData({ ...formData, language: e.target.value })}
                 className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E6F95]/30 focus:border-[#1E3A5F] transition bg-white"
               >
                 <option value="English">English</option>
-                <option value="Sinhala">Sinhala (සිංහල)</option>
-                <option value="Tamil">Tamil (தமிழ்)</option>
+                <option value="Sinhala">Sinhala</option>
+                <option value="Tamil">Tamil</option>
                 <option value="Multilingual">Multilingual</option>
               </select>
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">Category / Discipline *</label>
+              <label className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">
+                {t('field_category', 'Category / Discipline')} *
+              </label>
               <input
                 type="text"
                 list="category-suggestions"
@@ -232,7 +245,9 @@ export default function BookModal({ isOpen, onClose, onSave, bookToEdit, categor
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">Total Copies In Library *</label>
+              <label className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">
+                {t('field_total_copies', 'Total Copies')} *
+              </label>
               <input
                 type="number"
                 min="1"
@@ -244,7 +259,9 @@ export default function BookModal({ isOpen, onClose, onSave, bookToEdit, categor
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">Stack / Shelf Location</label>
+              <label className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">
+                {t('field_shelf', 'Stack / Shelf Location')}
+              </label>
               <input
                 type="text"
                 value={formData.shelfLocation}
@@ -255,7 +272,9 @@ export default function BookModal({ isOpen, onClose, onSave, bookToEdit, categor
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">Publisher</label>
+              <label className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">
+                {t('field_publisher', 'Publisher')}
+              </label>
               <input
                 type="text"
                 value={formData.publisher}
@@ -266,7 +285,7 @@ export default function BookModal({ isOpen, onClose, onSave, bookToEdit, categor
             </div>
 
             <div className="space-y-1 md:col-span-2">
-              <label className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">Cover Image URL (Optional)</label>
+              <label className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">Cover Image URL</label>
               <input
                 type="url"
                 value={formData.coverImage}
@@ -277,7 +296,9 @@ export default function BookModal({ isOpen, onClose, onSave, bookToEdit, categor
             </div>
 
             <div className="space-y-1 md:col-span-2">
-              <label className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">Annotation / Course Syllabus Context</label>
+              <label className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">
+                {t('field_description', 'Annotation / Syllabus Reference')}
+              </label>
               <textarea
                 rows="2"
                 value={formData.description}
@@ -294,7 +315,7 @@ export default function BookModal({ isOpen, onClose, onSave, bookToEdit, categor
               onClick={onClose}
               className="px-4 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition"
             >
-              Cancel
+              {t('cancel', 'Cancel')}
             </button>
             <button
               type="submit"
@@ -302,7 +323,7 @@ export default function BookModal({ isOpen, onClose, onSave, bookToEdit, categor
               className="flex items-center gap-2 px-5 py-2 text-sm font-black text-white bg-[#1E3A5F] hover:bg-[#2E6F95] rounded-xl shadow-md transition disabled:opacity-50 border border-[#2E6F95]/30"
             >
               {loading && <Loader2 className="w-4 h-4 animate-spin text-[#F4B942]" />}
-              <span>{bookToEdit ? 'Save Accession' : 'Register Accession'}</span>
+              <span>{bookToEdit ? t('save', 'Save Accession') : t('save', 'Register Accession')}</span>
             </button>
           </div>
         </form>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from './context/AuthContext';
+import { useLanguage } from './context/LanguageContext';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
@@ -14,6 +15,7 @@ import { Loader2 } from 'lucide-react';
 
 export default function App() {
   const { user, loading, isAdmin } = useAuth();
+  const { t } = useLanguage();
   const [authView, setAuthView] = useState('login'); // 'login' or 'register'
   const [activeTab, setActiveTab] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -30,7 +32,7 @@ export default function App() {
         <div className="flex flex-col items-center gap-3 text-[#1F2937]">
           <Loader2 className="w-9 h-9 animate-spin text-[#1E3A5F]" />
           <span className="text-sm font-bold tracking-wide text-[#1E3A5F]">
-            Starting LibriQ LMS • நூலக அமைப்பு ஆரம்பிக்கிறது...
+            {t('starting_lms', 'Starting LibriQ LMS...')}
           </span>
         </div>
       </div>

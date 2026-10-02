@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import {
   Search,
   Plus,
@@ -12,14 +13,13 @@ import {
   CheckCircle,
   XCircle,
   Loader2,
-  AlertCircle,
-  Tag,
-  Hash
+  AlertCircle
 } from 'lucide-react';
 import api from '../api/client';
 
 export default function Books({ onOpenAddBook, onOpenEditBook, onIssueBook }) {
   const { isAdmin } = useAuth();
+  const { t } = useLanguage();
   const [books, setBooks] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -96,12 +96,12 @@ export default function Books({ onOpenAddBook, onOpenEditBook, onIssueBook }) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black tracking-tight text-[#1E3A5F]">
-            Library Catalog & Accessions
+            {t('catalog_heading', 'Library Catalog & Accessions')}
           </h1>
           <p className="text-sm text-slate-500 font-medium">
             {isAdmin
-              ? 'Manage accession register, Dewey Decimal call numbers, shelf locations, and circulation copies.'
-              : 'Explore textbooks, past examination papers, and Sri Lankan heritage collections.'}
+              ? t('catalog_admin_sub', 'Manage accession register, Dewey Decimal call numbers, shelf locations, and circulation copies.')
+              : t('catalog_student_sub', 'Explore textbooks, past examination papers, and Sri Lankan heritage collections.')}
           </p>
         </div>
 
@@ -111,7 +111,7 @@ export default function Books({ onOpenAddBook, onOpenEditBook, onIssueBook }) {
             className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#1E3A5F] hover:bg-[#2E6F95] text-white font-bold text-sm rounded-xl shadow-md transition active:scale-95 border border-[#2E6F95]/30"
           >
             <Plus className="w-4 h-4 text-[#F4B942]" />
-            <span>Add New Accession</span>
+            <span>{t('btn_add_accession', 'Add New Accession')}</span>
           </button>
         )}
       </div>
@@ -136,7 +136,7 @@ export default function Books({ onOpenAddBook, onOpenEditBook, onIssueBook }) {
             onClick={() => setFeedback(null)}
             className="text-xs font-bold uppercase hover:underline"
           >
-            Dismiss
+            {t('dismiss', 'Dismiss')}
           </button>
         </div>
       )}
@@ -150,14 +150,14 @@ export default function Books({ onOpenAddBook, onOpenEditBook, onIssueBook }) {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by title, author, ISBN, Accession No (ACC-...), or Call No..."
+              placeholder={t('search_books_placeholder', 'Search by title, author, ISBN, Accession No (ACC-...), or Call No...')}
               className="w-full pl-10 pr-24 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E6F95]/30 focus:border-[#1E3A5F] transition"
             />
             <button
               type="submit"
               className="absolute right-2 top-1/2 -translate-y-1/2 px-3.5 py-1.5 bg-[#1E3A5F] text-[#F4B942] text-xs font-bold rounded-lg hover:bg-[#2E6F95] transition"
             >
-              Search
+              {t('search', 'Search')}
             </button>
           </form>
 
@@ -168,9 +168,9 @@ export default function Books({ onOpenAddBook, onOpenEditBook, onIssueBook }) {
               onChange={(e) => setAvailabilityFilter(e.target.value)}
               className="px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#2E6F95]/30 font-semibold text-[#1F2937]"
             >
-              <option value="all">All Copies</option>
-              <option value="available">Available on Shelf Only</option>
-              <option value="borrowed_out">Fully Borrowed Out</option>
+              <option value="all">{t('filter_all_copies', 'All Copies')}</option>
+              <option value="available">{t('filter_available_only', 'Available on Shelf Only')}</option>
+              <option value="borrowed_out">{t('filter_borrowed_only', 'Fully Borrowed Out')}</option>
             </select>
           </div>
         </div>
@@ -187,7 +187,7 @@ export default function Books({ onOpenAddBook, onOpenEditBook, onIssueBook }) {
                   : 'bg-[#F7F9FC] text-[#1F2937] hover:bg-[#d4e0ee] border border-slate-200/60'
               }`}
             >
-              {cat}
+              {cat === 'All' ? t('all', 'All') : cat}
             </button>
           ))}
         </div>
@@ -197,14 +197,14 @@ export default function Books({ onOpenAddBook, onOpenEditBook, onIssueBook }) {
       {loading ? (
         <div className="py-20 flex flex-col items-center justify-center gap-3 text-slate-400">
           <Loader2 className="w-8 h-8 animate-spin text-[#1E3A5F]" />
-          <span className="text-sm font-semibold">Loading university library catalog...</span>
+          <span className="text-sm font-semibold">{t('starting_lms', 'Loading university library catalog...')}</span>
         </div>
       ) : books.length === 0 ? (
         <div className="bg-white rounded-3xl p-12 text-center border border-slate-200 shadow-xs space-y-3">
           <BookOpen className="w-12 h-12 text-slate-300 mx-auto" />
-          <h3 className="text-lg font-bold text-[#1E3A5F]">No catalog items found</h3>
+          <h3 className="text-lg font-bold text-[#1E3A5F]">{t('no_books_found', 'No catalog items found')}</h3>
           <p className="text-sm text-slate-500 max-w-sm mx-auto">
-            Try adjusting your search terms or selecting another category filter.
+            {t('no_books_sub', 'Try adjusting your search terms or selecting another category filter.')}
           </p>
         </div>
       ) : (
@@ -232,7 +232,7 @@ export default function Books({ onOpenAddBook, onOpenEditBook, onIssueBook }) {
                     ) : (
                       <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#eaf0f6] to-[#d4e0ee] text-[#1E3A5F]">
                         <BookOpen className="w-10 h-10 mb-1" />
-                        <span className="text-xs font-bold uppercase tracking-wider">LibriQ Catalog</span>
+                        <span className="text-xs font-bold uppercase tracking-wider">{t('app_name', 'LibriQ')}</span>
                       </div>
                     )}
 
@@ -258,12 +258,12 @@ export default function Books({ onOpenAddBook, onOpenEditBook, onIssueBook }) {
                         {isAvailable ? (
                           <>
                             <CheckCircle className="w-3.5 h-3.5 text-[#F4B942]" />
-                            {book.availableCopies} Left
+                            {book.availableCopies} {t('left_on_shelf', 'Left')}
                           </>
                         ) : (
                           <>
                             <XCircle className="w-3.5 h-3.5" />
-                            Issued
+                            {t('issued_out', 'Issued')}
                           </>
                         )}
                       </span>
@@ -277,7 +277,7 @@ export default function Books({ onOpenAddBook, onOpenEditBook, onIssueBook }) {
                         {book.title}
                       </h3>
                       <p className="text-xs font-semibold text-slate-500 mt-1">
-                        By <span className="text-[#1F2937]">{book.author}</span>
+                        {t('field_author', 'Author')}: <span className="text-[#1F2937]">{book.author}</span>
                       </p>
                     </div>
 
@@ -308,7 +308,7 @@ export default function Books({ onOpenAddBook, onOpenEditBook, onIssueBook }) {
                       </div>
                       <div className="flex items-center gap-1.5 justify-end">
                         <Layers className="w-3.5 h-3.5 text-[#2E6F95]" />
-                        <span>{book.totalCopies} Total Copies</span>
+                        <span>{book.totalCopies} {t('field_total_copies', 'Total Copies')}</span>
                       </div>
                     </div>
 
@@ -328,13 +328,13 @@ export default function Books({ onOpenAddBook, onOpenEditBook, onIssueBook }) {
                         className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-[#1E3A5F] hover:bg-[#2E6F95] disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold text-xs rounded-xl shadow-xs transition"
                       >
                         <SendHorizontal className="w-3.5 h-3.5 text-[#F4B942]" />
-                        <span>Issue Copy</span>
+                        <span>{t('btn_issue_copy', 'Issue Copy')}</span>
                       </button>
 
                       <button
                         onClick={() => onOpenEditBook(book)}
                         className="p-2 text-[#2E6F95] hover:bg-white hover:text-[#1E3A5F] rounded-lg border border-transparent hover:border-slate-200 transition"
-                        title="Edit accession details"
+                        title={t('edit_details', 'Edit accession details')}
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
@@ -343,7 +343,7 @@ export default function Books({ onOpenAddBook, onOpenEditBook, onIssueBook }) {
                         onClick={() => handleDelete(book)}
                         disabled={deleteLoading === book._id}
                         className="p-2 text-slate-400 hover:bg-white hover:text-rose-600 rounded-lg border border-transparent hover:border-slate-200 transition disabled:opacity-50"
-                        title="Delete from catalog"
+                        title={t('delete_accession', 'Delete from catalog')}
                       >
                         {deleteLoading === book._id ? (
                           <Loader2 className="w-4 h-4 animate-spin text-rose-600" />
@@ -355,7 +355,7 @@ export default function Books({ onOpenAddBook, onOpenEditBook, onIssueBook }) {
                   ) : (
                     <div className="w-full flex items-center justify-between text-xs font-bold">
                       <span className={isAvailable ? 'text-emerald-700' : 'text-slate-400'}>
-                        {isAvailable ? '✓ In Library Stack' : 'Currently Checked Out'}
+                        {isAvailable ? `✓ ${t('available_stack', 'In Library Stack')}` : t('issued_out', 'Issued')}
                       </span>
                       <span className="text-[#2E6F95] font-semibold text-[11px]">
                         {book.lendingType}

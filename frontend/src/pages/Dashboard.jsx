@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import StatsCard from '../components/StatsCard';
 import {
   BookOpen,
   CheckCircle,
   Clock,
   AlertCircle,
-  Users,
   Coins,
   ArrowUpRight,
   Plus,
@@ -18,6 +18,7 @@ import api from '../api/client';
 
 export default function Dashboard({ setActiveTab, onOpenIssueModal, onOpenAddBookModal }) {
   const { user, isAdmin } = useAuth();
+  const { t } = useLanguage();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -40,7 +41,7 @@ export default function Dashboard({ setActiveTab, onOpenIssueModal, onOpenAddBoo
   };
 
   const formatDate = (dateStr) => {
-    if (!dateStr) return 'N/A';
+    if (!dateStr) return t('na', 'N/A');
     return new Date(dateStr).toLocaleDateString('en-GB', {
       month: 'short',
       day: 'numeric',
@@ -62,19 +63,19 @@ export default function Dashboard({ setActiveTab, onOpenIssueModal, onOpenAddBoo
             <div className="flex items-center gap-2">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-xs font-bold uppercase tracking-wider text-[#F4B942] border border-[#F4B942]/30">
                 <Building2 className="w-3.5 h-3.5" />
-                {isAdmin ? 'Senior Librarian / நூலகர்' : `Student Card: ${user.indexNo || user.memberId || 'Active'}`}
+                {isAdmin ? t('senior_librarian', 'Senior Librarian') : `${t('index_no', 'Student Reg')}: ${user.indexNo || user.memberId || t('undergraduate', 'Undergraduate')}`}
               </span>
               <span className="text-[11px] text-blue-200 hidden sm:inline">
-                பல்கலைக்கழக நூலகம் • University Library
+                {t('lms_subtitle', 'National & University Library System')}
               </span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
-              வணக்கம் / Welcome, {user?.name}
+              {t('welcome_greeting', 'Welcome back')}, {user?.name}
             </h1>
             <p className="text-blue-100/90 text-sm max-w-xl leading-relaxed">
               {isAdmin
-                ? 'Manage catalog accessions, student circulation loans, and calculate late return fines in Sri Lankan Rupees (Rs. LKR).'
-                : 'Search course textbooks, check physical stack locations, and track your active university library loans.'}
+                ? t('admin_banner_sub', 'Manage catalog accessions, student circulation loans, and calculate late return fines in Sri Lankan Rupees.')
+                : t('student_banner_sub', 'Search course textbooks, check physical shelf locations, and track your active university library loans.')}
             </p>
           </div>
 
@@ -86,14 +87,14 @@ export default function Dashboard({ setActiveTab, onOpenIssueModal, onOpenAddBoo
                   className="px-4 py-2.5 bg-[#F4B942] hover:bg-[#e5aa2d] text-[#1E3A5F] font-black text-sm rounded-xl shadow-md transition flex items-center gap-2 active:scale-95"
                 >
                   <Plus className="w-4 h-4 text-[#1E3A5F]" />
-                  <span>Issue Book / இரவல்</span>
+                  <span>{t('issue_book_btn', 'Issue Book')}</span>
                 </button>
                 <button
                   onClick={onOpenAddBookModal}
                   className="px-4 py-2.5 bg-white/15 hover:bg-white/25 text-white border border-white/20 font-bold text-sm rounded-xl transition flex items-center gap-2 backdrop-blur-sm"
                 >
                   <BookOpen className="w-4 h-4 text-[#F4B942]" />
-                  <span>Add Accession / சேர்ப்பு</span>
+                  <span>{t('btn_add_accession', 'Add Accession')}</span>
                 </button>
               </>
             ) : (
@@ -102,7 +103,7 @@ export default function Dashboard({ setActiveTab, onOpenIssueModal, onOpenAddBoo
                 className="px-5 py-2.5 bg-[#F4B942] hover:bg-[#e5aa2d] text-[#1E3A5F] font-black text-sm rounded-xl shadow-md transition flex items-center gap-2 active:scale-95"
               >
                 <Search className="w-4 h-4" />
-                <span>Search Catalog / தேடல்</span>
+                <span>{t('search', 'Search Catalog')}</span>
               </button>
             )}
           </div>
@@ -116,30 +117,30 @@ export default function Dashboard({ setActiveTab, onOpenIssueModal, onOpenAddBoo
       {isAdmin ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatsCard
-            title="Total Catalog Titles"
+            title={t('card_catalog_titles', 'Catalog Titles')}
             value={stats?.totalBooks || 0}
-            subtitle="மொத்த புத்தகங்கள் (Library Copies)"
+            subtitle={t('card_catalog_sub', 'Total physical copies')}
             icon={BookOpen}
             color="primary"
           />
           <StatsCard
-            title="Active Circulation Loans"
+            title={t('card_active_loans', 'Active Loans')}
             value={stats?.activeBorrows || 0}
-            subtitle="கடன் வழங்கப்பட்டவை (Issued)"
+            subtitle={t('card_active_sub', 'Copies on shelf')}
             icon={CheckCircle}
             color="secondary"
           />
           <StatsCard
-            title="Overdue Returns"
+            title={t('card_overdue', 'Overdue Returns')}
             value={stats?.overdueBorrows || 0}
-            subtitle="தவணை கடந்தவை (Fine Applicable)"
+            subtitle={t('card_overdue_sub', 'Fine accumulating')}
             icon={AlertCircle}
             color="rose"
           />
           <StatsCard
-            title="Total Fines Due"
+            title={t('card_fines_due', 'Total Fines Due')}
             value={`Rs. ${stats?.totalFines || 0}.00`}
-            subtitle="தாமதக் கட்டணம் (Rs. 10 / Day)"
+            subtitle={t('card_fine_rate', 'Fine rate: Rs. 10/day')}
             icon={Coins}
             color="accent"
           />
@@ -147,30 +148,30 @@ export default function Dashboard({ setActiveTab, onOpenIssueModal, onOpenAddBoo
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatsCard
-            title="Currently Borrowed"
+            title={t('card_my_borrowed', 'Currently Borrowed')}
             value={stats?.myActiveBorrows || 0}
-            subtitle="கைவசம் உள்ள நூல்கள்"
+            subtitle={t('card_my_borrowed_sub', 'Books in your possession')}
             icon={BookOpen}
             color="primary"
           />
           <StatsCard
-            title="Overdue Items"
+            title={t('card_overdue', 'Overdue Items')}
             value={stats?.myOverdue || 0}
-            subtitle="தவணை கடந்த நூல்கள்"
+            subtitle={stats?.myOverdue > 0 ? t('card_overdue_sub', 'Fine accumulating') : t('card_all_ontime', 'All loans on time')}
             icon={AlertCircle}
             color={stats?.myOverdue > 0 ? 'rose' : 'emerald'}
           />
           <StatsCard
-            title="Total Borrowed"
+            title={t('card_my_total', 'Total Borrowed')}
             value={stats?.myTotalBorrows || 0}
-            subtitle="மொத்த இரவல்கள் (Lifetime)"
+            subtitle={t('card_my_total_sub', 'Lifetime university loans')}
             icon={CheckCircle}
             color="secondary"
           />
           <StatsCard
-            title="Outstanding Fine"
+            title={t('card_fine_balance', 'Fine Balance')}
             value={`Rs. ${stats?.myFines || 0}.00`}
-            subtitle="செலுத்த வேண்டிய கட்டணம்"
+            subtitle={stats?.myFines > 0 ? t('card_fine_rate', 'Fine rate: Rs. 10/day') : t('card_account_clear', 'Account in good standing')}
             icon={Coins}
             color={stats?.myFines > 0 ? 'accent' : 'emerald'}
           />
@@ -186,16 +187,18 @@ export default function Dashboard({ setActiveTab, onOpenIssueModal, onOpenAddBoo
             </div>
             <div>
               <h2 className="font-extrabold text-[#1E3A5F] text-base leading-tight">
-                {isAdmin ? 'Recent Issue & Return Circulation' : 'Your Borrowing Activity'}
+                {isAdmin ? t('recent_transactions_title', 'Recent Issue & Return Circulation') : t('student_activity_title', 'Your Borrowing Activity')}
               </h2>
-              <span className="text-[11px] text-slate-500 font-medium">சமீபத்திய இரவல் மற்றும் மீளளித்தல் பதிவுகள்</span>
+              <span className="text-[11px] text-slate-500 font-medium">
+                {t('lms_subtitle', 'National & University Library System')}
+              </span>
             </div>
           </div>
           <button
             onClick={() => setActiveTab('transactions')}
             className="text-xs font-bold text-[#2E6F95] hover:text-[#1E3A5F] flex items-center gap-1 hover:underline"
           >
-            <span>View All / அனைத்தும்</span>
+            <span>{t('view_all_records', 'View All Records')}</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -204,12 +207,12 @@ export default function Dashboard({ setActiveTab, onOpenIssueModal, onOpenAddBoo
           <table className="w-full text-left text-sm text-[#1F2937]">
             <thead className="bg-[#F7F9FC] text-xs uppercase font-bold text-slate-500 tracking-wider">
               <tr>
-                <th className="px-6 py-3.5">Book Title & Acc No / புத்தகம்</th>
-                {isAdmin && <th className="px-6 py-3.5">Student Patron / மாணவர்</th>}
-                <th className="px-6 py-3.5">Issued / திகதி</th>
-                <th className="px-6 py-3.5">Due / தவணை</th>
-                <th className="px-6 py-3.5">Status / நிலை</th>
-                <th className="px-6 py-3.5 text-right">Fine (LKR) / கட்டணம்</th>
+                <th className="px-6 py-3.5">{t('th_book_acc', 'Book Title & Accession')}</th>
+                {isAdmin && <th className="px-6 py-3.5">{t('th_student_member', 'Student Patron')}</th>}
+                <th className="px-6 py-3.5">{t('th_issue_date', 'Issued On')}</th>
+                <th className="px-6 py-3.5">{t('th_due_date', 'Due Date')}</th>
+                <th className="px-6 py-3.5">{t('th_loan_status', 'Loan Status')}</th>
+                <th className="px-6 py-3.5 text-right">{t('th_fine', 'Fine (LKR)')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -245,17 +248,17 @@ export default function Dashboard({ setActiveTab, onOpenIssueModal, onOpenAddBoo
                     <td className="px-6 py-4">
                       {tx.status === 'returned' && (
                         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                          <CheckCircle className="w-3 h-3 text-emerald-600" /> Returned (மீளளிக்கப்பட்டது)
+                          <CheckCircle className="w-3 h-3 text-emerald-600" /> {t('status_returned', 'Returned')}
                         </span>
                       )}
                       {tx.status === 'issued' && (
                         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-[#edf5f9] text-[#1E3A5F] border border-[#d6e8f2]">
-                          <Clock className="w-3 h-3 text-[#2E6F95]" /> Active Loan (இரவல்)
+                          <Clock className="w-3 h-3 text-[#2E6F95]" /> {t('status_active', 'Active Loan')}
                         </span>
                       )}
                       {tx.status === 'overdue' && (
                         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
-                          <AlertCircle className="w-3 h-3" /> Overdue (தாமதம்)
+                          <AlertCircle className="w-3 h-3" /> {t('status_overdue', 'Overdue')}
                         </span>
                       )}
                     </td>
@@ -271,7 +274,7 @@ export default function Dashboard({ setActiveTab, onOpenIssueModal, onOpenAddBoo
               ) : (
                 <tr>
                   <td colSpan={isAdmin ? 6 : 5} className="px-6 py-8 text-center text-slate-400">
-                    No recent circulation transactions found.
+                    {t('no_recent_records', 'No recent circulation records found.')}
                   </td>
                 </tr>
               )}

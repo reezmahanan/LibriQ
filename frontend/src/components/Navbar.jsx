@@ -1,12 +1,15 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { LogOut, ShieldCheck, GraduationCap, Menu } from 'lucide-react';
+import LanguageSelector from './LanguageSelector';
 
 export default function Navbar({ onToggleSidebar }) {
   const { user, logout, isAdmin } = useAuth();
+  const { t } = useLanguage();
 
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between h-16 px-6 bg-white border-b border-slate-200/80 shadow-xs">
+    <header className="sticky top-0 z-30 flex items-center justify-between h-16 px-4 sm:px-6 bg-white border-b border-slate-200/80 shadow-xs">
       <div className="flex items-center gap-4">
         <button
           onClick={onToggleSidebar}
@@ -24,29 +27,32 @@ export default function Navbar({ onToggleSidebar }) {
             <div className="flex items-center gap-2">
               <span className="font-extrabold text-xl tracking-tight text-[#1E3A5F]">LibriQ</span>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#1E3A5F]/10 text-[#1E3A5F] border border-[#2E6F95]/20 uppercase tracking-wider">
-                LK LMS
+                {t('lms_tag', 'LK LMS')}
               </span>
             </div>
-            <p className="text-[10px] text-slate-500 hidden sm:block font-medium">
-              தேசிய மற்றும் பல்கலைக்கழக நூலகம் • විශ්වවිද්‍යාල පුස්තකාලය • University Library
+            <p className="text-[11px] text-slate-500 hidden sm:block font-medium">
+              {t('lms_subtitle', 'National & University Library System')}
             </p>
           </div>
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3 sm:gap-4">
+        {/* Language Selection Dropdown (Single active language display) */}
+        <LanguageSelector variant="nav" />
+
         {user ? (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 pl-2 sm:pl-3 border-l border-slate-200">
             <div className="hidden sm:flex flex-col text-right">
               <span className="text-sm font-bold text-[#1F2937]">{user.name}</span>
               <span className="text-xs text-slate-500 flex items-center justify-end gap-1 font-medium">
                 {isAdmin ? (
                   <span className="text-[#1E3A5F] font-semibold flex items-center gap-1">
-                    <ShieldCheck className="w-3.5 h-3.5 text-[#F4B942]" /> Senior Librarian / நூலகர்
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#F4B942]" /> {t('senior_librarian', 'Senior Librarian')}
                   </span>
                 ) : (
                   <span className="text-[#2E6F95] font-semibold flex items-center gap-1">
-                    <GraduationCap className="w-3.5 h-3.5 text-[#F4B942]" /> {user.indexNo || user.memberId || 'Undergraduate'}
+                    <GraduationCap className="w-3.5 h-3.5 text-[#F4B942]" /> {user.indexNo || user.memberId || t('undergraduate', 'Undergraduate')}
                   </span>
                 )}
               </span>
@@ -58,7 +64,7 @@ export default function Navbar({ onToggleSidebar }) {
 
             <button
               onClick={logout}
-              title="Sign Out / வெளியேறுக"
+              title={t('sign_out', 'Sign Out')}
               className="p-2 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition"
             >
               <LogOut className="w-5 h-5" />

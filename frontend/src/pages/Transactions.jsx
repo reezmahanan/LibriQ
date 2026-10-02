@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import {
   ArrowLeftRight,
   Clock,
@@ -15,6 +16,7 @@ import api from '../api/client';
 
 export default function Transactions({ onOpenIssueModal }) {
   const { isAdmin } = useAuth();
+  const { t } = useLanguage();
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('all');
@@ -80,12 +82,12 @@ export default function Transactions({ onOpenIssueModal }) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black tracking-tight text-[#1E3A5F]">
-            {isAdmin ? 'Circulation Desk (Issues & Returns)' : 'My University Borrowed Books'}
+            {isAdmin ? t('trans_admin_heading', 'Circulation Desk (Issues & Returns)') : t('trans_student_heading', 'My University Borrowed Books')}
           </h1>
           <p className="text-sm text-slate-500 font-medium">
             {isAdmin
-              ? 'Track active loans, calculate late return penalties (Rs. 10/day), and process returns.'
-              : 'Review your borrowed titles, due dates, and Sri Lankan Rupee overdue fines.'}
+              ? t('trans_admin_sub', 'Track active loans, calculate late return penalties (Rs. 10/day), and process returns.')
+              : t('trans_student_sub', 'Review your borrowed titles, due dates, and Sri Lankan Rupee overdue fines.')}
           </p>
         </div>
 
@@ -95,7 +97,7 @@ export default function Transactions({ onOpenIssueModal }) {
             className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#1E3A5F] hover:bg-[#2E6F95] text-white font-bold text-sm rounded-xl shadow-md transition active:scale-95 border border-[#2E6F95]/30"
           >
             <ArrowLeftRight className="w-4 h-4 text-[#F4B942]" />
-            <span>Issue New Book</span>
+            <span>{t('issue_book_btn', 'Issue New Book')}</span>
           </button>
         )}
       </div>
@@ -120,7 +122,7 @@ export default function Transactions({ onOpenIssueModal }) {
             onClick={() => setFeedback(null)}
             className="text-xs font-bold uppercase hover:underline"
           >
-            Dismiss
+            {t('dismiss', 'Dismiss')}
           </button>
         </div>
       )}
@@ -128,10 +130,10 @@ export default function Transactions({ onOpenIssueModal }) {
       {/* Filter Tabs */}
       <div className="flex items-center gap-2 bg-white p-1.5 rounded-2xl border border-slate-200 shadow-xs w-fit text-xs font-bold">
         {[
-          { id: 'all', label: 'All Records' },
-          { id: 'issued', label: 'Active Loans' },
-          { id: 'overdue', label: 'Overdue (Fines)' },
-          { id: 'returned', label: 'Completed Returns' },
+          { id: 'all', label: t('tab_all', 'All Records') },
+          { id: 'issued', label: t('tab_active', 'Active Loans') },
+          { id: 'overdue', label: t('tab_overdue', 'Overdue (Fines)') },
+          { id: 'returned', label: t('tab_returned', 'Completed Returns') },
         ].map((tab) => (
           <button
             key={tab.id}
@@ -152,26 +154,26 @@ export default function Transactions({ onOpenIssueModal }) {
         {loading ? (
           <div className="py-20 flex flex-col items-center justify-center gap-3 text-slate-400">
             <Loader2 className="w-8 h-8 animate-spin text-[#1E3A5F]" />
-            <span className="text-sm font-semibold">Loading circulation ledger...</span>
+            <span className="text-sm font-semibold">{t('starting_lms', 'Loading circulation ledger...')}</span>
           </div>
         ) : transactions.length === 0 ? (
           <div className="py-16 text-center space-y-2">
             <ArrowLeftRight className="w-10 h-10 text-slate-300 mx-auto" />
-            <h3 className="text-base font-bold text-[#1E3A5F]">No circulation records found</h3>
-            <p className="text-xs text-slate-500">There are no records matching your current filter.</p>
+            <h3 className="text-base font-bold text-[#1E3A5F]">{t('no_trans_found', 'No circulation records found')}</h3>
+            <p className="text-xs text-slate-500">{t('no_books_sub', 'There are no records matching your current filter.')}</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm text-[#1F2937]">
               <thead className="bg-[#F7F9FC] text-xs uppercase font-bold text-slate-500 tracking-wider">
                 <tr>
-                  <th className="px-6 py-4">Book Details & Accession</th>
-                  {isAdmin && <th className="px-6 py-4">Student Patron</th>}
-                  <th className="px-6 py-4">Issued On</th>
-                  <th className="px-6 py-4">Due Date</th>
-                  <th className="px-6 py-4">Status</th>
-                  <th className="px-6 py-4">Fine (LKR)</th>
-                  {isAdmin && <th className="px-6 py-4 text-right">Circulation Action</th>}
+                  <th className="px-6 py-4">{t('th_book_acc', 'Book Details & Accession')}</th>
+                  {isAdmin && <th className="px-6 py-4">{t('th_student_member', 'Student Patron')}</th>}
+                  <th className="px-6 py-4">{t('th_issue_date', 'Issued On')}</th>
+                  <th className="px-6 py-4">{t('th_due_date', 'Due Date')}</th>
+                  <th className="px-6 py-4">{t('th_loan_status', 'Status')}</th>
+                  <th className="px-6 py-4">{t('th_fine', 'Fine (LKR)')}</th>
+                  {isAdmin && <th className="px-6 py-4 text-right">{t('actions', 'Circulation Action')}</th>}
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -191,7 +193,7 @@ export default function Transactions({ onOpenIssueModal }) {
                             />
                           ) : (
                             <div className="w-10 h-14 bg-[#eaf0f6] rounded-lg flex items-center justify-center text-[#1E3A5F] font-bold text-xs flex-shrink-0">
-                              Book
+                              LQ
                             </div>
                           )}
                           <div>
@@ -240,7 +242,7 @@ export default function Transactions({ onOpenIssueModal }) {
                         </div>
                         {isReturned && (
                           <span className="text-[11px] text-emerald-700 font-semibold block mt-0.5">
-                            Returned: {formatDate(tx.returnDate)}
+                            {t('returned_on', 'Returned')}: {formatDate(tx.returnDate)}
                           </span>
                         )}
                       </td>
@@ -248,17 +250,17 @@ export default function Transactions({ onOpenIssueModal }) {
                       <td className="px-6 py-4">
                         {isReturned && (
                           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Returned
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> {t('status_returned', 'Returned')}
                           </span>
                         )}
                         {tx.status === 'issued' && (
                           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-[#edf5f9] text-[#1E3A5F] border border-[#d6e8f2]">
-                            <Clock className="w-3.5 h-3.5 text-[#2E6F95]" /> Active Loan
+                            <Clock className="w-3.5 h-3.5 text-[#2E6F95]" /> {t('status_active', 'Active Loan')}
                           </span>
                         )}
                         {isOverdue && (
                           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-black bg-rose-50 text-rose-700 border border-rose-200">
-                            <AlertTriangle className="w-3.5 h-3.5" /> Overdue
+                            <AlertTriangle className="w-3.5 h-3.5" /> {t('status_overdue', 'Overdue')}
                           </span>
                         )}
                       </td>
@@ -284,10 +286,10 @@ export default function Transactions({ onOpenIssueModal }) {
                               ) : (
                                 <RotateCcw className="w-3.5 h-3.5" />
                               )}
-                              <span>Process Return</span>
+                              <span>{t('btn_process_return', 'Process Return')}</span>
                             </button>
                           ) : (
-                            <span className="text-xs text-slate-400 font-semibold">Cleared</span>
+                            <span className="text-xs text-slate-400 font-semibold">{t('clear', 'Cleared')}</span>
                           )}
                         </td>
                       )}

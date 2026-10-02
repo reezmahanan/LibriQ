@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { X, SendHorizontal, Loader2, Book, User, Calendar, FileText } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
+import { X, Loader2, Book, User, Calendar, FileText } from 'lucide-react';
 import api from '../api/client';
 
 export default function IssueModal({ isOpen, onClose, onIssued, preselectedBookId }) {
+  const { t } = useLanguage();
   const [books, setBooks] = useState([]);
   const [members, setMembers] = useState([]);
   const [selectedBook, setSelectedBook] = useState('');
@@ -87,13 +89,13 @@ export default function IssueModal({ isOpen, onClose, onIssued, preselectedBookI
               <Book className="w-4 h-4" />
             </div>
             <div>
-              <span>Issue Book / Circulation</span>
-              <span className="block text-[11px] font-medium text-slate-500">நூல் இரவல் வழங்கல் • පොත් නිකුත් කිරීම</span>
+              <span>{t('modal_issue_title', 'Issue Book / Circulation')}</span>
             </div>
           </div>
           <button
             onClick={onClose}
             className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-200/50 transition"
+            aria-label="Close"
           >
             <X className="w-5 h-5" />
           </button>
@@ -110,14 +112,14 @@ export default function IssueModal({ isOpen, onClose, onIssued, preselectedBookI
           {fetching ? (
             <div className="py-8 flex flex-col items-center justify-center gap-2 text-slate-400">
               <Loader2 className="w-6 h-6 animate-spin text-[#1E3A5F]" />
-              <span className="text-xs font-semibold">Loading available stack titles & student roster...</span>
+              <span className="text-xs font-semibold">{t('starting_lms', 'Loading available stack titles & student roster...')}</span>
             </div>
           ) : (
             <>
               <div className="space-y-1.5">
                 <label className="flex items-center gap-1.5 text-xs font-bold text-[#1F2937] uppercase tracking-wider">
                   <Book className="w-3.5 h-3.5 text-[#2E6F95]" />
-                  <span>Select Book / புத்தகம் (In Library Stack)</span>
+                  <span>{t('select_book_label', 'Select Book (Available Stack)')}</span>
                 </label>
                 <select
                   required
@@ -126,11 +128,11 @@ export default function IssueModal({ isOpen, onClose, onIssued, preselectedBookI
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E6F95]/30 focus:border-[#1E3A5F] transition bg-white"
                 >
                   {books.length === 0 ? (
-                    <option value="">No titles currently in shelf stack</option>
+                    <option value="">{t('no_books_found', 'No titles currently in shelf stack')}</option>
                   ) : (
                     books.map((b) => (
                       <option key={b._id} value={b._id}>
-                        {b.title} [{b.accessionNo || 'ACC'}] — {b.availableCopies} available
+                        {b.title} [{b.accessionNo || 'ACC'}] — {b.availableCopies} {t('left_on_shelf', 'Left')}
                       </option>
                     ))
                   )}
@@ -140,7 +142,7 @@ export default function IssueModal({ isOpen, onClose, onIssued, preselectedBookI
               <div className="space-y-1.5">
                 <label className="flex items-center gap-1.5 text-xs font-bold text-[#1F2937] uppercase tracking-wider">
                   <User className="w-3.5 h-3.5 text-[#2E6F95]" />
-                  <span>Student or Staff Patron / மாணவர்</span>
+                  <span>{t('select_patron_label', 'Student or Staff Patron')}</span>
                 </label>
                 <select
                   required
@@ -149,11 +151,11 @@ export default function IssueModal({ isOpen, onClose, onIssued, preselectedBookI
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E6F95]/30 focus:border-[#1E3A5F] transition bg-white"
                 >
                   {members.length === 0 ? (
-                    <option value="">No registered patrons</option>
+                    <option value="">{t('no_members_found', 'No registered patrons')}</option>
                   ) : (
                     members.map((m) => (
                       <option key={m._id} value={m._id}>
-                        {m.name} ({m.indexNo || m.memberId}) — {m.activeBorrowsCount || 0} active loans
+                        {m.name} ({m.indexNo || m.memberId}) — {m.activeBorrowsCount || 0} {t('books_on_loan', 'loans')}
                       </option>
                     ))
                   )}
@@ -163,30 +165,30 @@ export default function IssueModal({ isOpen, onClose, onIssued, preselectedBookI
               <div className="space-y-1.5">
                 <label className="flex items-center gap-1.5 text-xs font-bold text-[#1F2937] uppercase tracking-wider">
                   <Calendar className="w-3.5 h-3.5 text-[#2E6F95]" />
-                  <span>Loan Period / தவணைக் காலம் (Due in Days)</span>
+                  <span>{t('loan_duration_label', 'Loan Period (Due in Days)')}</span>
                 </label>
                 <select
                   value={dueDays}
                   onChange={(e) => setDueDays(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E6F95]/30 focus:border-[#1E3A5F] transition bg-white"
                 >
-                  <option value={7}>7 Days (SR / Scheduled Reference Loan)</option>
-                  <option value={14}>14 Days (Standard Undergraduate Loan)</option>
-                  <option value={21}>21 Days (Extended Study Loan)</option>
-                  <option value={28}>28 Days (Academic Staff / Final Year Project)</option>
+                  <option value={7}>7 {t('days', 'Days')} (SR / Scheduled Reference)</option>
+                  <option value={14}>14 {t('days', 'Days')} (Standard Undergraduate)</option>
+                  <option value={21}>21 {t('days', 'Days')} (Extended Study Loan)</option>
+                  <option value={28}>28 {t('days', 'Days')} (Academic Staff / Final Year)</option>
                 </select>
               </div>
 
               <div className="space-y-1.5">
                 <label className="flex items-center gap-1.5 text-xs font-bold text-[#1F2937] uppercase tracking-wider">
                   <FileText className="w-3.5 h-3.5 text-[#2E6F95]" />
-                  <span>Circulation Notes (Optional)</span>
+                  <span>{t('staff_notes', 'Circulation Staff Notes')}</span>
                 </label>
                 <input
                   type="text"
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="e.g. Verified student index card 23IT0480, good condition"
+                  placeholder="e.g. Verified student index card, good condition"
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E6F95]/30 focus:border-[#1E3A5F] transition"
                 />
               </div>
@@ -199,7 +201,7 @@ export default function IssueModal({ isOpen, onClose, onIssued, preselectedBookI
               onClick={onClose}
               className="px-4 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition"
             >
-              Cancel
+              {t('cancel', 'Cancel')}
             </button>
             <button
               type="submit"
@@ -207,7 +209,7 @@ export default function IssueModal({ isOpen, onClose, onIssued, preselectedBookI
               className="flex items-center gap-2 px-5 py-2 text-sm font-black text-white bg-[#1E3A5F] hover:bg-[#2E6F95] rounded-xl shadow-md transition disabled:opacity-50 border border-[#2E6F95]/30"
             >
               {loading && <Loader2 className="w-4 h-4 animate-spin text-[#F4B942]" />}
-              <span>Confirm Circulation Issue</span>
+              <span>{t('confirm_issue', 'Confirm Circulation Issue')}</span>
             </button>
           </div>
         </form>

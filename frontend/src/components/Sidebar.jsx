@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { 
   LayoutDashboard, 
   BookOpen, 
@@ -12,30 +13,27 @@ import {
 
 export default function Sidebar({ activeTab, setActiveTab, isOpen, setIsOpen, onOpenIssueModal }) {
   const { isAdmin } = useAuth();
+  const { t } = useLanguage();
 
   const navItems = [
     { 
       id: 'dashboard', 
-      label: 'Library Dashboard', 
-      tamil: 'முகப்பு பலகை',
+      label: t('nav_dashboard', 'Library Dashboard'), 
       icon: LayoutDashboard 
     },
     { 
       id: 'books', 
-      label: 'Catalog & Accessions', 
-      tamil: 'நூல் விபரம்',
+      label: t('nav_books', 'Catalog & Accessions'), 
       icon: BookOpen 
     },
     { 
       id: 'transactions', 
-      label: isAdmin ? 'Circulation (Issue/Return)' : 'My Borrowed Books', 
-      tamil: isAdmin ? 'இரவல் வழங்கல் / மீளளித்தல்' : 'எனது நூல்கள்',
+      label: isAdmin ? t('nav_circulation', 'Circulation (Issue & Return)') : t('nav_my_borrows', 'My Borrowed Books'), 
       icon: ArrowLeftRight 
     },
     ...(isAdmin ? [{ 
       id: 'members', 
-      label: 'Student & Patron Directory', 
-      tamil: 'மாணவர் & அங்கத்தவர்',
+      label: t('nav_patrons', 'Student & Patron Directory'), 
       icon: Users 
     }] : []),
   ];
@@ -58,9 +56,13 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen, setIsOpen, on
         <div className="space-y-5">
           <div className="flex items-center justify-between lg:hidden px-2">
             <span className="text-xs font-bold text-[#1E3A5F] uppercase tracking-wider">
-              Navigation / வழிசெலுத்தல்
+              {t('lms_tag', 'LK LMS')}
             </span>
-            <button onClick={() => setIsOpen(false)} className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg">
+            <button 
+              onClick={() => setIsOpen(false)} 
+              className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg"
+              aria-label="Close Sidebar"
+            >
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -72,17 +74,14 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen, setIsOpen, on
                 setIsOpen(false);
                 onOpenIssueModal();
               }}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#1E3A5F] hover:bg-[#2E6F95] text-white font-bold text-sm rounded-xl shadow-md transition active:scale-95 border border-[#2E6F95]/50 group"
+              className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 bg-[#1E3A5F] hover:bg-[#2E6F95] text-white font-bold text-sm rounded-xl shadow-md transition active:scale-95 border border-[#2E6F95]/50 group"
             >
               <PlusCircle className="w-4 h-4 text-[#F4B942]" />
-              <div className="text-left">
-                <span className="block leading-tight">Issue Book</span>
-                <span className="block text-[10px] text-[#F4B942] font-normal">நூல் இரவல் வழங்கல்</span>
-              </div>
+              <span>{t('issue_book_btn', 'Issue Book')}</span>
             </button>
           )}
 
-          {/* Navigation Links */}
+          {/* Navigation Links - Single clean language label */}
           <nav className="space-y-1.5">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -100,13 +99,8 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen, setIsOpen, on
                       : 'text-[#1F2937] hover:bg-[#F7F9FC] hover:text-[#1E3A5F]'
                   }`}
                 >
-                  <Icon className={`w-5 h-5 flex-shrink-0 ${isActive ? 'text-[#F4B942]' : 'text-[#2E6F95]'}`} />
-                  <div>
-                    <span className="block leading-snug">{item.label}</span>
-                    <span className={`block text-[10px] ${isActive ? 'text-[#F4B942]' : 'text-slate-500'}`}>
-                      {item.tamil}
-                    </span>
-                  </div>
+                  <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-[#F4B942]' : 'text-[#2E6F95]'}`} />
+                  <span className="truncate leading-snug">{item.label}</span>
                 </button>
               );
             })}
@@ -116,17 +110,19 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen, setIsOpen, on
         {/* System info / Footer */}
         <div className="p-3.5 bg-[#F7F9FC] rounded-2xl border border-slate-200/80 text-xs text-[#1F2937] space-y-1.5">
           <div className="flex items-center gap-2 font-bold text-[#1E3A5F]">
-            <BookMarked className="w-4 h-4 text-[#F4B942]" />
-            <span>Sri Lankan University LMS</span>
+            <BookMarked className="w-4 h-4 text-[#F4B942] shrink-0" />
+            <span className="truncate">{t('university_lms_badge', 'Sri Lankan University LMS')}</span>
           </div>
-          <p className="text-[11px] text-slate-500 font-medium">பல்கலைக்கழக நூலகம் • University Library</p>
+          <p className="text-[11px] text-slate-500 font-medium">
+            {t('ugc_standards', 'UGC Library Standards')}
+          </p>
           <div className="flex items-center justify-between pt-1 border-t border-slate-200/60 text-[11px]">
             <span className="text-emerald-700 font-semibold flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              Live Server
+              {t('live_server', 'Live Server')}
             </span>
             <span className="font-bold text-[#1E3A5F] bg-[#F4B942]/20 px-1.5 py-0.5 rounded text-[10px]">
-              Rs. LKR
+              LKR (Rs.)
             </span>
           </div>
         </div>

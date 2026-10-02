@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import {
   Users,
   Search,
@@ -8,13 +9,13 @@ import {
   SendHorizontal,
   Loader2,
   UserCheck,
-  GraduationCap,
   Building,
   CreditCard
 } from 'lucide-react';
 import api from '../api/client';
 
 export default function Members({ onIssueToMember }) {
+  const { t } = useLanguage();
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -45,7 +46,7 @@ export default function Members({ onIssueToMember }) {
   };
 
   const formatDate = (dateStr) => {
-    if (!dateStr) return 'N/A';
+    if (!dateStr) return t('na', 'N/A');
     return new Date(dateStr).toLocaleDateString('en-GB', {
       month: 'short',
       day: 'numeric',
@@ -59,10 +60,10 @@ export default function Members({ onIssueToMember }) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black tracking-tight text-[#1E3A5F]">
-            Student & Staff Patron Directory
+            {t('members_heading', 'Student & Staff Patron Directory')}
           </h1>
           <p className="text-sm text-slate-500 font-medium">
-            Manage university student registrations, faculty cards, and active circulation borrow allowances.
+            {t('members_sub', 'Manage university student registrations, faculty cards, and active circulation borrow allowances.')}
           </p>
         </div>
       </div>
@@ -75,14 +76,14 @@ export default function Members({ onIssueToMember }) {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by Student Name, Index No (23IT...), NIC, or Faculty..."
+            placeholder={t('search_members_placeholder', 'Search by Student Name, Index No (23IT...), NIC, or Faculty...')}
             className="w-full pl-10 pr-24 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E6F95]/30 focus:border-[#1E3A5F] transition"
           />
           <button
             type="submit"
             className="absolute right-2 top-1/2 -translate-y-1/2 px-3.5 py-1.5 bg-[#1E3A5F] text-[#F4B942] text-xs font-bold rounded-lg hover:bg-[#2E6F95] transition"
           >
-            Search
+            {t('search', 'Search')}
           </button>
         </form>
       </div>
@@ -91,13 +92,13 @@ export default function Members({ onIssueToMember }) {
       {loading ? (
         <div className="py-20 flex flex-col items-center justify-center gap-3 text-slate-400">
           <Loader2 className="w-8 h-8 animate-spin text-[#1E3A5F]" />
-          <span className="text-sm font-semibold">Loading student roster...</span>
+          <span className="text-sm font-semibold">{t('starting_lms', 'Loading student roster...')}</span>
         </div>
       ) : members.length === 0 ? (
         <div className="py-16 bg-white rounded-3xl border border-slate-200 shadow-xs text-center space-y-2">
           <Users className="w-10 h-10 text-slate-300 mx-auto" />
-          <h3 className="text-base font-bold text-[#1E3A5F]">No university patrons found</h3>
-          <p className="text-xs text-slate-500">Try searching with index number or name.</p>
+          <h3 className="text-base font-bold text-[#1E3A5F]">{t('no_members_found', 'No patrons found matching your search.')}</h3>
+          <p className="text-xs text-slate-500">{t('no_books_sub', 'Try searching with index number or name.')}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -123,7 +124,7 @@ export default function Members({ onIssueToMember }) {
                   </div>
 
                   <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                    <UserCheck className="w-3 h-3 text-emerald-600" /> Active
+                    <UserCheck className="w-3 h-3 text-emerald-600" /> {t('active_patron', 'Active Patron')}
                   </span>
                 </div>
 
@@ -150,16 +151,16 @@ export default function Members({ onIssueToMember }) {
                   )}
                   <div className="flex items-center gap-2">
                     <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                    <span>Enrolled: {formatDate(member.createdAt)}</span>
+                    <span>{t('enrolled_on', 'Enrolled')}: {formatDate(member.createdAt)}</span>
                   </div>
                 </div>
               </div>
 
               <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
                 <div className="text-xs">
-                  <span className="text-slate-400 block text-[10px] uppercase font-bold">Circulation</span>
+                  <span className="text-slate-400 block text-[10px] uppercase font-bold">{t('nav_circulation', 'Circulation')}</span>
                   <span className="font-black text-[#1E3A5F]">
-                    {member.activeBorrowsCount || 0} books on loan
+                    {member.activeBorrowsCount || 0} {t('books_on_loan', 'books on loan')}
                   </span>
                 </div>
 
@@ -168,7 +169,7 @@ export default function Members({ onIssueToMember }) {
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#eaf0f6] hover:bg-[#1E3A5F] text-[#1E3A5F] hover:text-[#F4B942] font-bold text-xs rounded-xl transition border border-[#d4e0ee]"
                 >
                   <SendHorizontal className="w-3.5 h-3.5" />
-                  <span>Issue Book</span>
+                  <span>{t('issue_book_btn', 'Issue Book')}</span>
                 </button>
               </div>
             </div>
