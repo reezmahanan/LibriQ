@@ -56,7 +56,7 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen, setIsOpen, on
         <div className="space-y-5">
           <div className="flex items-center justify-between lg:hidden px-2">
             <span className="text-xs font-bold text-[#1E3A5F] uppercase tracking-wider">
-              {t('lms_tag', 'LK LMS')}
+              LibriQ
             </span>
             <button 
               onClick={() => setIsOpen(false)} 
@@ -108,22 +108,10 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen, setIsOpen, on
         </div>
 
         {/* System info / Footer */}
-        <div className="p-3.5 bg-[#F7F9FC] rounded-2xl border border-slate-200/80 text-xs text-[#1F2937] space-y-1.5">
+        <div className="p-3 bg-[#F7F9FC] rounded-xl border border-slate-200/80 text-xs text-[#1F2937]">
           <div className="flex items-center gap-2 font-bold text-[#1E3A5F]">
             <BookMarked className="w-4 h-4 text-[#F4B942] shrink-0" />
             <span className="truncate">{t('university_lms_badge', 'Sri Lankan University LMS')}</span>
-          </div>
-          <p className="text-[11px] text-slate-500 font-medium">
-            {t('ugc_standards', 'UGC Library Standards')}
-          </p>
-          <div className="flex items-center justify-between pt-1 border-t border-slate-200/60 text-[11px]">
-            <span className="text-emerald-700 font-semibold flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              {t('live_server', 'Live Server')}
-            </span>
-            <span className="font-bold text-[#1E3A5F] bg-[#F4B942]/20 px-1.5 py-0.5 rounded text-[10px]">
-              LKR (Rs.)
-            </span>
           </div>
         </div>
       </aside>

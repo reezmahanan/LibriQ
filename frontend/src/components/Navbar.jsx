@@ -26,9 +26,6 @@ export default function Navbar({ onToggleSidebar }) {
           <div>
             <div className="flex items-center gap-2">
               <span className="font-extrabold text-xl tracking-tight text-[#1E3A5F]">LibriQ</span>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#1E3A5F]/10 text-[#1E3A5F] border border-[#2E6F95]/20 uppercase tracking-wider">
-                {t('lms_tag', 'LK LMS')}
-              </span>
             </div>
             <p className="text-[11px] text-slate-500 hidden sm:block font-medium">
               {t('lms_subtitle', 'National & University Library System')}
